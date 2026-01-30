@@ -14,38 +14,49 @@
       height: 100vh;
       margin: 0;
       transition: background-color 0.3s, color 0.3s;
+      flex-direction: column;
+      padding: 20px;
     }
+
     .dark-mode {
       background-color: #333;
       color: #f0f0f0;
     }
+
     .container {
       background: #fff;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      width: 500px;
-      max-width: 90%;
+      width: 100%;
+      max-width: 500px;
       text-align: center;
+      margin-bottom: 20px;
     }
+
     .dark-mode .container {
       background: #444;
     }
+
     h1 {
       color: #333;
       margin-bottom: 10px;
     }
+
     .dark-mode h1 {
       color: #f0f0f0;
     }
+
     p {
       color: #555;
       font-size: 16px;
       margin-bottom: 20px;
     }
+
     .dark-mode p {
       color: #ccc;
     }
+
     textarea {
       width: 100%;
       height: 100px;
@@ -55,6 +66,7 @@
       border: 1px solid #ccc;
       resize: vertical;
     }
+
     #output {
       margin-top: 20px;
       font-size: 20px;
@@ -66,10 +78,12 @@
       white-space: pre-wrap;
       text-align: right;
     }
+
     .dark-mode #output {
       background: #555;
       color: #fff;
     }
+
     button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -81,70 +95,94 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     button:hover {
       background: #45a049;
     }
+
+    /* زر الوضع الداكن (الهلال) */
     #darkModeBtn {
-      background: #333;
-      color: #fff;
-      margin-top: 20px;
-      width: 100%;
-    }
-    .arrow {
-      position: absolute;
+      position: fixed;
       top: 20px;
-      left: 10px;
-      font-size: 18px;
+      left: auto;
+      right: 20px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #333;
+      cursor: pointer;
+      z-index: 999;
+      transition: color 0.3s;
+    }
+
+    .dark-mode #darkModeBtn {
+      color: #f0f0f0;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      textarea {
+        font-size: 16px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>محول الكيبورد الإنجليزي → عربي</h1>
-  <p>موقع يساعدك على تعديل كلامك من الإنجليزي إلى العربي، مثل: <strong>hgsghl ugd;l</strong> إلى <strong>السلام عليكم</strong>.</p>
-  <textarea id="input" placeholder="اكتب النص هنا..."></textarea>
-  <div id="output" placeholder="النص العربي يظهر هنا..."></div>
-  <button id="copyBtn">نسخ النص العربي</button>
-  <button id="darkModeBtn">تفعيل الوضع الداكن</button>
-  <div class="arrow">←</div>
-</div>
+  <!-- زر الوضع الداكن (الهلال) -->
+  <button id="darkModeBtn">🌙</button>
 
-<script>
-  const map = {
-    "]":"د","[":"ج","p":"ح","o":"خ","i":"ه","u":"ع","y":"غ","t":"ف","r":"ق","e":"ث",
-    "w":"ص","q":"ض","'":"ط",";":"ك","l":"م","k":"ن","j":"ت","h":"ا","g":"ل","f":"ب",
-    "d":"ي","s":"س","a":"ش","/":"ظ",".":"ز",",":"و","m":"ة","n":"ى","b":"لا","v":"ر",
-    "c":"ؤ","x":"ء","z":"ئ"
-  };
+  <div class="container">
+    <h1>محول الكيبورد الإنجليزي → عربي</h1>
+    <p>موقع يساعدك على تعديل كلامك من الإنجليزي إلى العربي، مثل: <strong>hgsghl ugd;l</strong> إلى <strong>السلام عليكم</strong>.</p>
+    <textarea id="input" placeholder="اكتب النص هنا..."></textarea>
+    <div id="output" placeholder="النص العربي يظهر هنا..."></div>
+    <button id="copyBtn">نسخ النص العربي</button>
+  </div>
 
-  const input = document.getElementById("input");
-  const output = document.getElementById("output");
-  const copyBtn = document.getElementById("copyBtn");
-  const darkModeBtn = document.getElementById("darkModeBtn");
+  <script>
+    const map = {
+      "]":"د","[":"ج","p":"ح","o":"خ","i":"ه","u":"ع","y":"غ","t":"ف","r":"ق","e":"ث",
+      "w":"ص","q":"ض","'":"ط",";":"ك","l":"م","k":"ن","j":"ت","h":"ا","g":"ل","f":"ب",
+      "d":"ي","s":"س","a":"ش","/":"ظ",".":"ز",",":"و","m":"ة","n":"ى","b":"لا","v":"ر",
+      "c":"ؤ","x":"ء","z":"ئ"
+    };
 
-  input.addEventListener("input", () => {
-    let text = input.value;
-    let result = "";
-    for (let char of text) {
-      result += map[char] || char; // يحافظ على المسافات وعلامات الترقيم
-    }
-    // عكس النص بحيث يظهر بالعربية من اليمين لليسار
-    output.textContent = result.split('').reverse().join('');
-  });
+    const input = document.getElementById("input");
+    const output = document.getElementById("output");
+    const copyBtn = document.getElementById("copyBtn");
+    const darkModeBtn = document.getElementById("darkModeBtn");
 
-  copyBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(output.textContent)
-      .then(() => alert("تم نسخ النص العربي!"))
-      .catch(() => alert("حدث خطأ أثناء النسخ."));
-  });
+    input.addEventListener("input", () => {
+      let text = input.value;
+      let result = "";
+      for (let char of text) {
+        result += map[char] || char; // يحافظ على المسافات وعلامات الترقيم
+      }
+      // عكس النص بحيث يظهر بالعربية من اليمين لليسار
+      output.textContent = result.split('').reverse().join('');
+    });
 
-  darkModeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-    const isDark = document.body.classList.contains("dark-mode");
-    darkModeBtn.textContent = isDark ? "إيقاف الوضع الداكن" : "تفعيل الوضع الداكن";
-  });
-</script>
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(output.textContent)
+        .then(() => alert("تم نسخ النص العربي!"))
+        .catch(() => alert("حدث خطأ أثناء النسخ."));
+    });
+
+    darkModeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      darkModeBtn.textContent = isDark ? "🌙" : "🌞";
+    });
+  </script>
 
 </body>
 </html>
