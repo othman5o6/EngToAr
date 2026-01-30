@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>محول الكيبورد الإنجليزي → عربي</title>
+  <title>محول الكيبورد الإنجليزي → عربي والعكس</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -147,42 +147,64 @@
   </button>
 
   <div class="container">
-    <h1>محول الكيبورد الإنجليزي → عربي</h1>
-    <p>موقع يساعدك على تعديل كلامك من الإنجليزي إلى العربي، مثل:</p>
-    <strong>من hgsghl ugd;l الى السلام عليكم<strong>
-      
+    <h1>محول الكيبورد الإنجليزي → عربي والعكس</h1>
+    <p>يمكنك تحويل النصوص بين اللغة الإنجليزية والعربية. على سبيل المثال:</p>
+    <strong>من "hgsghl ugd;l" إلى "السلام عليكم"</strong><br>
+    <strong>أو من "اثممخ" إلى "hello"</strong>
+
     <textarea id="input" placeholder="اكتب النص هنا..."></textarea>
-    <div id="output" placeholder="النص العربي يظهر هنا..."></div>
-    <button id="copyBtn">نسخ النص العربي</button>
+    <div id="output" placeholder="النص يظهر هنا..."></div>
+    
+    <button id="copyBtn">نسخ النص</button>
+    
+    <div>
+      <button id="toggleModeBtn">تحويل إلى الوضع المعاكس</button>
+    </div>
   </div>
 
   <script>
-    const map = {
+    const mapToArabic = {
       "]":"د","[":"ج","p":"ح","o":"خ","i":"ه","u":"ع","y":"غ","t":"ف","r":"ق","e":"ث",
       "w":"ص","q":"ض","'":"ط",";":"ك","l":"م","k":"ن","j":"ت","h":"ا","g":"ل","f":"ب",
       "d":"ي","s":"س","a":"ش","/":"ظ",".":"ز",",":"و","m":"ة","n":"ى","b":"لا","v":"ر",
       "c":"ؤ","x":"ء","z":"ئ"
     };
 
+    const mapToEnglish = {
+      "د":"]","ج":"[","ح":"p","خ":"o","ه":"i","ع":"u","غ":"y","ف":"t","ق":"r","ث":"e",
+      "ص":"w","ض":"q","ط":"'","ك":";","م":"l","ن":"k","ت":"j","ا":"h","ل":"g","ب":"f",
+      "ي":"d","س":"s","ش":"a","ظ":"/","ز":".","و":",","ة":"m","ى":"n","لا":"b","ر":"v",
+      "ؤ":"c","ء":"x","ئ":"z"
+    };
+
+    let isArabicToEnglish = true; // By default, we are converting from Arabic to English
+
     const input = document.getElementById("input");
     const output = document.getElementById("output");
     const copyBtn = document.getElementById("copyBtn");
     const darkModeBtn = document.getElementById("darkModeBtn");
+    const toggleModeBtn = document.getElementById("toggleModeBtn");
 
     input.addEventListener("input", () => {
       let text = input.value;
       let result = "";
       for (let char of text) {
-        result += map[char] || char; // يحافظ على المسافات وعلامات الترقيم
+        result += isArabicToEnglish ? (mapToArabic[char] || char) : (mapToEnglish[char] || char);
       }
-      // إزالة عملية عكس النص
       output.textContent = result;
     });
 
     copyBtn.addEventListener("click", () => {
       navigator.clipboard.writeText(output.textContent)
-        .then(() => alert("تم نسخ النص العربي!"))
+        .then(() => alert("تم نسخ النص!"))
         .catch(() => alert("حدث خطأ أثناء النسخ."));
+    });
+
+    toggleModeBtn.addEventListener("click", () => {
+      isArabicToEnglish = !isArabicToEnglish;
+      toggleModeBtn.textContent = isArabicToEnglish ? "تحويل إلى الوضع المعاكس" : "تحويل إلى الإنجليزي → عربي";
+      input.value = '';
+      output.textContent = '';
     });
 
     darkModeBtn.addEventListener("click", () => {
